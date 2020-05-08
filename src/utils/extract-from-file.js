@@ -3,10 +3,10 @@ const { transform } = require('@babel/core');
 
 const babel = {
     presets: [
-        'react-app'
+        require('babel-preset-react-app')
     ],
     plugins: [
-        'react-intl'
+        require('babel-plugin-react-intl')
     ]
 };
 
