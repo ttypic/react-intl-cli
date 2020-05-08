@@ -20,7 +20,7 @@ const parseArgs = ({ name, version, argv }) => {
         .option(
             '-o, --output <output-dir>',
             'the target location where the program will output a `{locale}.json` for each locale.',
-            'translations/'
+            'translations'
         )
         .option(
             '-i, --input <glob-pattern>',

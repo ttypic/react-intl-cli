@@ -1,3 +1,4 @@
+const fs = require('fs');
 const readline = require('readline');
 const chalk = require('chalk');
 
@@ -63,9 +64,8 @@ const fetchExistingTranslations = ({ appLocales, outputPath }) => {
             }
         } catch (error) {
             if (error.code !== 'ENOENT') {
-                process.stderr.write(
-                    `There was an error loading this translation file: ${translationFileName}\n${error}`,
-                );
+                process.stderr.write(`There was an error loading this translation file: ${translationFileName}\n`);
+                process.stderr.write(`${error}\n`);
             }
         }
     }

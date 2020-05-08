@@ -25,9 +25,8 @@ const saveResults = ({ appLocales, outputPath, localeMappings }) => {
         // Make the directory if it doesn't exist, especially for first run
         fs.mkdirSync(`${outputPath}`, { recursive: true });
     } catch (error) {
-        console.error(`There was an error creating output dir: ${outputPath}`);
-        console.error('');
-        console.error(`${error}`);
+        process.stderr.write(`There was an error creating output dir: ${outputPath}\n`);
+        process.stderr.write(`${error}\n`);
     }
 
     let localeTaskDone;
@@ -62,30 +61,26 @@ const saveResults = ({ appLocales, outputPath, localeMappings }) => {
     }
 };
 
-const extract = ({ appLocales, defaultLocale, outputPath, input }) => {
+const extract = async ({ appLocales, defaultLocale, outputPath, input }) => {
     // Store existing translations into memory
     const { oldLocaleMappings, localeMappings } = fetchExistingTranslations({ appLocales, outputPath });
 
     const context = { appLocales, defaultLocale, localeMappings, oldLocaleMappings };
 
-    const memoryTask = glob(input);
     const memoryTaskDone = task('Storing language files in memory');
+    const files = await glob(input);
 
-    memoryTask.then(files => {
-        memoryTaskDone();
+    memoryTaskDone();
 
-        const extractTask = Promise.all(
-            files.map(fileName => extractFromFileAndMerge(fileName, context)),
-        );
-        const extractTaskDone = task('Run extraction on all files');
+    const extractTaskDone = task('Run extraction on all files');
 
-        extractTask.then(() => {
-            extractTaskDone();
-            saveResults({ appLocales, outputPath, localeMappings });
-            process.exit();
-        });
-    });
+    await Promise.all(
+        files.map(fileName => extractFromFileAndMerge(fileName, context)),
+    );
 
+    extractTaskDone();
+
+    saveResults({ appLocales, outputPath, localeMappings });
 };
 
 module.exports = extract;

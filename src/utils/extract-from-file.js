@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { transform } = require('@babel/core');
 
 const babel = {
@@ -47,9 +48,8 @@ const extractFromFile = async filename => {
         return getMessagesOrEmptyList(output);
 
     } catch (error) {
-        console.error(`Error transforming file: ${filename}`);
-        console.error('');
-        console.error(`${error}`);
+        process.stderr.write(`Error transforming file: ${filename}\n`);
+        process.stderr.write(`${error}\n`);
 
         return [];
     }

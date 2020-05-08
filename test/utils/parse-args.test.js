@@ -15,7 +15,7 @@ test('it provide default options', () => {
         ]
     });
 
-    expect(program['output']).toBe('translations/');
+    expect(program['output']).toBe('translations');
     expect(program['input']).toBe('**/!(*.test).js');
     expect(program['locales']).toEqual(['en']);
     expect(program['defaultLocale']).toBe('en');

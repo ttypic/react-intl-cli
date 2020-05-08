@@ -14,4 +14,4 @@ const config = {
     defaultLocale: program['defaultLocale']
 };
 
-extract(config);
+extract(config).then(() => process.exit(0));
