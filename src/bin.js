@@ -10,8 +10,9 @@ process.env.NODE_ENV = 'development';
 const program = parseArgs({ name, version, argv: process.argv });
 
 const config = {
+    globPatterns: program['globPatterns'],
     outputPath: program['output'],
-    input: program['input'],
+    ignorePattern: program['ignorePattern'],
     appLocales: program['locales'],
     defaultLocale: program['defaultLocale']
 };

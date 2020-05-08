@@ -16,7 +16,8 @@ test('it provide default options', () => {
     });
 
     expect(program['output']).toBe('translations');
-    expect(program['input']).toBe('**/!(*.test).js');
+    expect(program['globPatterns']).toEqual(['**/*.js']);
+    expect(program['ignorePattern']).toBe('**/node_modules/**');
     expect(program['locales']).toEqual(['en']);
     expect(program['defaultLocale']).toBe('en');
 });
@@ -51,4 +52,18 @@ test('it exit with 1 on unknown props', () => {
 
     expect(runProgram).toThrowError();
     expect(exitSpy).toHaveBeenNthCalledWith(1, 1);
+});
+
+test('it provide custom glob pattern', () => {
+    const program = parseArgs({
+        argv: [
+            'node',
+            'react-intl-cli',
+            'extract',
+            '**/*.jsx',
+            '**/*.js'
+        ]
+    });
+
+    expect(program['globPatterns']).toEqual(['**/*.jsx', '**/*.js']);
 });

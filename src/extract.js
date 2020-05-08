@@ -61,14 +61,16 @@ const saveResults = ({ appLocales, outputPath, localeMappings }) => {
     }
 };
 
-const extract = async ({ appLocales, defaultLocale, outputPath, input }) => {
+const extract = async ({ appLocales, defaultLocale, outputPath, ignorePattern, globPatterns }) => {
     // Store existing translations into memory
     const { oldLocaleMappings, localeMappings } = fetchExistingTranslations({ appLocales, outputPath });
 
     const context = { appLocales, defaultLocale, localeMappings, oldLocaleMappings };
 
     const memoryTaskDone = task('Storing language files in memory');
-    const files = await glob(input);
+
+    const ignorePatterns = ignorePattern ? [ignorePattern] : [];
+    const files = await glob(globPatterns, { ignore: ignorePatterns });
 
     memoryTaskDone();
 

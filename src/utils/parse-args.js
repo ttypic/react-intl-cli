@@ -16,16 +16,16 @@ const parseArgs = ({ name, version, argv }) => {
         });
 
     const extract = program
-        .command('extract')
+        .command('extract [glob-patterns...]')
         .option(
             '-o, --output <output-dir>',
             'the target location where the program will output a `{locale}.json` for each locale.',
             'translations'
         )
         .option(
-            '-i, --input <glob-pattern>',
+            '--ignore-pattern <glob-pattern>',
             'input glob pattern',
-            '**/!(*.test).js'
+            '**/node_modules/**'
         )
         .option(
             '-l, --locales <comma-separated-names>',
@@ -39,9 +39,17 @@ const parseArgs = ({ name, version, argv }) => {
             'en'
         );
 
+    let globPatterns = ['**/*.js'];
+
+    extract.action(patterns => {
+        if (!!patterns.length) {
+            globPatterns = patterns;
+        }
+    });
+
     program.parse(argv);
 
-    return extract.opts();
+    return { ...extract.opts(), globPatterns };
 };
 
 module.exports = parseArgs;
