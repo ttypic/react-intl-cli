@@ -13,8 +13,9 @@ const extractFromFileAndMerge = async (filename, { appLocales, defaultLocale, lo
     for (const message of messages) {
         for (const locale of appLocales) {
             const oldLocaleMapping = oldLocaleMappings[locale][message.id];
+            const defaultMessage = message.defaultMessage || '';
             // Merge old translations into the babel extracted instances where react-intl is used
-            const newMsg = locale === defaultLocale ? message.defaultMessage : '';
+            const newMsg = locale === defaultLocale ? defaultMessage : '';
             localeMappings[locale][message.id] = oldLocaleMapping || newMsg;
         }
     }

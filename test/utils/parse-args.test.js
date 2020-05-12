@@ -16,7 +16,7 @@ test('it provide default options', () => {
     });
 
     expect(program['output']).toBe('translations');
-    expect(program['globPatterns']).toEqual(['**/*.js']);
+    expect(program['globPatterns']).toEqual(['**/*.[jt]s?(x)']);
     expect(program['ignorePattern']).toBe('**/node_modules/**');
     expect(program['locales']).toEqual(['en']);
     expect(program['defaultLocale']).toBe('en');

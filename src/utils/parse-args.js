@@ -39,7 +39,7 @@ const parseArgs = ({ name, version, argv }) => {
             'en'
         );
 
-    let globPatterns = ['**/*.js'];
+    let globPatterns = ['**/*.[jt]s?(x)'];
 
     extract.action(patterns => {
         if (!!patterns.length) {

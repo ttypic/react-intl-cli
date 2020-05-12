@@ -63,3 +63,29 @@ test('it merge messages with existing', () => {
         expect(writeFileSyncSpy).toHaveBeenCalledWith('translations/cz.json', expectedCz);
     });
 });
+
+test('it extract message for default locale even if defaultMessage is not set', () => {
+    const config = {
+        outputPath: 'translations',
+        input: '**/*.js',
+        appLocales: ['en', 'cz'],
+        defaultLocale: 'en'
+    };
+
+    glob.mockReturnValue(Promise.resolve(['some-file.js']));
+
+    extractFromFile.mockReturnValue([
+        { id: "some_id_1" },
+        { id: "some_id_3", defaultMessage: 'some_default' }
+    ]);
+
+    readFileSyncSpy.mockImplementation(() => '{"some_id_2": "some_other_text"}');
+
+    const expectedEn = '{\n  "some_id_1": "",\n  "some_id_3": "some_default"\n}\n';
+    const expectedCz = '{\n  "some_id_1": "",\n  "some_id_3": ""\n}\n';
+
+    return extract(config).then(() => {
+        expect(writeFileSyncSpy).toHaveBeenCalledWith('translations/en.json', expectedEn);
+        expect(writeFileSyncSpy).toHaveBeenCalledWith('translations/cz.json', expectedCz);
+    });
+});
