@@ -7,20 +7,13 @@ const { createProgressLogger, fetchExistingTranslations } = require('./utils/ext
 // Progress Logger
 const task = createProgressLogger();
 
-const extractFromFileAndMerge = async (filename, { appLocales, defaultLocale, localeMappings, oldLocaleMappings }) => {
-    const messages = await extractFromFile(filename);
-
-    for (const message of messages) {
-        for (const locale of appLocales) {
-            const oldLocaleMapping = oldLocaleMappings[locale][message.id];
-            const defaultMessage = message.defaultMessage || '';
-            // Merge old translations into the babel extracted instances where react-intl is used
-            const newMsg = locale === defaultLocale ? defaultMessage : '';
-            localeMappings[locale][message.id] = oldLocaleMapping || newMsg;
-        }
-    }
-};
-
+/**
+ * Save locale messages to `outputPath`. Create `outputPath` folder if it doesn't exist
+ *
+ * @param   {String[]} appLocales       List of locales
+ * @param   {String} outputPath         Output path
+ * @param   {Object} localeMappings     Locale to messages dictionary
+ */
 const saveResults = ({ appLocales, outputPath, localeMappings }) => {
     try {
         // Make the directory if it doesn't exist, especially for first run
@@ -62,11 +55,57 @@ const saveResults = ({ appLocales, outputPath, localeMappings }) => {
     }
 };
 
+const calculateNextMessageText = ({ message, oldLocaleMappings, locale, defaultLocale }) => {
+    const oldLocaleMapping = oldLocaleMappings[locale][message.id];
+    const defaultMessage = message.defaultMessage || '';
+    // Merge old translations into the babel extracted instances where react-intl is used
+    const messageText = locale === defaultLocale ? defaultMessage : '';
+
+    return oldLocaleMapping || messageText;
+};
+
+/**
+ * Extract messages from specified files
+ *
+ * @param   {String[]} files              List of filenames to extract messages from
+ * @param   {Object} prevLocaleMappings   Previous locale to messages dictionary
+ * @param   {String[]} appLocales         List of locales
+ * @param   {String} defaultLocale        Default locale
+ *
+ * @return  {Promise<Object>}   next locale to messages dictionary
+ */
+const extractMessages = async ({ files, prevLocaleMappings, appLocales, defaultLocale }) => {
+    const localeToMessages = {};
+
+    appLocales.forEach(locale => (localeToMessages[locale] = {}));
+
+    await Promise.all(
+        files.map(async filename => {
+            const messages = await extractFromFile(filename);
+
+            for (const message of messages) {
+                for (const locale of appLocales) {
+                    localeToMessages[locale][message.id] = calculateNextMessageText({ oldLocaleMappings: prevLocaleMappings, message, locale, defaultLocale });
+                }
+            }
+        })
+    );
+
+    return localeToMessages;
+};
+
+/**
+ * Extract messages from files matched specified `globPatterns`
+ *
+ * @param   {String[]} appLocales       List of app locales
+ * @param   {String} defaultLocale      Default locale
+ * @param   {String} outputPath         Output path where messages will be saved
+ * @param   {String} ignorePattern      Optional ignore pattern
+ * @param   {String[]} globPatterns     List of glob patterns
+ */
 const extract = async ({ appLocales, defaultLocale, outputPath, ignorePattern, globPatterns }) => {
     // Store existing translations into memory
-    const { oldLocaleMappings, localeMappings } = fetchExistingTranslations({ appLocales, outputPath });
-
-    const context = { appLocales, defaultLocale, localeMappings, oldLocaleMappings };
+    const prevLocaleMappings = fetchExistingTranslations({ appLocales, outputPath });
 
     const memoryTaskDone = task('Storing language files in memory');
 
@@ -77,13 +116,11 @@ const extract = async ({ appLocales, defaultLocale, outputPath, ignorePattern, g
 
     const extractTaskDone = task('Run extraction on all files');
 
-    await Promise.all(
-        files.map(fileName => extractFromFileAndMerge(fileName, context)),
-    );
+    const nextLocaleMappings = await extractMessages({ files, prevLocaleMappings, appLocales, defaultLocale });
 
     extractTaskDone();
 
-    saveResults({ appLocales, outputPath, localeMappings });
+    saveResults({ appLocales, outputPath, localeMappings: nextLocaleMappings });
 };
 
 module.exports = extract;

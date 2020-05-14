@@ -46,13 +46,11 @@ const createProgressLogger  = () => {
 };
 
 const fetchExistingTranslations = ({ appLocales, outputPath }) => {
-    const oldLocaleMappings = {};
-    const localeMappings = {};
+    const prevLocaleMappings = {};
 
     // Loop to run once per locale
     for (const locale of appLocales) {
-        oldLocaleMappings[locale] = {};
-        localeMappings[locale] = {};
+        prevLocaleMappings[locale] = {};
         // File to store translation messages into
         const translationFileName = `${outputPath}/${locale}.json`;
         try {
@@ -60,7 +58,7 @@ const fetchExistingTranslations = ({ appLocales, outputPath }) => {
             const messages = JSON.parse(fs.readFileSync(translationFileName, 'utf8'));
             const messageKeys = Object.keys(messages);
             for (const messageKey of messageKeys) {
-                oldLocaleMappings[locale][messageKey] = messages[messageKey];
+                prevLocaleMappings[locale][messageKey] = messages[messageKey];
             }
         } catch (error) {
             if (error.code !== 'ENOENT') {
@@ -70,7 +68,7 @@ const fetchExistingTranslations = ({ appLocales, outputPath }) => {
         }
     }
 
-    return { localeMappings, oldLocaleMappings }
+    return prevLocaleMappings;
 };
 
 module.exports = { fetchExistingTranslations, createProgressLogger };
