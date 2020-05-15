@@ -1,15 +1,6 @@
 const fs = require('fs');
 const { transform } = require('@babel/core');
 
-const babel = {
-    presets: [
-        require('babel-preset-react-app')
-    ],
-    plugins: [
-        require('babel-plugin-react-intl')
-    ]
-};
-
 /**
  * Gets the value at `'metadata.react-intl.messages'` of object.
  * If the resolved value is undefined, empty list is returned in its place.
@@ -43,7 +34,12 @@ const extractFromFile = async filename => {
     try {
         const code = await readFile(filename);
 
-        const output = await transform(code, { filename, ...babel });
+        const preCompiledConfig = { presets: [require('babel-preset-react-app')] };
+        const reactIntlConfig = { plugins: [require('babel-plugin-react-intl')] };
+
+        const { code: preCompiledCode } = await transform(code, { filename, ...preCompiledConfig });
+
+        const output = await transform(preCompiledCode, { filename, ...reactIntlConfig });
 
         return getMessagesOrEmptyList(output);
 
