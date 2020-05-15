@@ -14,6 +14,8 @@ test('it provide empty output on file without messages', () => {
 });
 
 test('it extract messages', () => {
+    process.env.NODE_ENV = 'development';
+
     const fileWithMessagesContent = `
         import React, { Component } from 'react';
         import { defineMessages } from 'react-intl';
