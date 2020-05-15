@@ -11,16 +11,12 @@ const { transform } = require('@babel/core');
  */
 const getMessagesOrEmptyList = obj => {
     const messages = obj && obj.metadata && obj.metadata['react-intl'] && obj.metadata['react-intl'].messages;
-    return messages || []
+    return messages || [];
 };
 
 const readFile = fileName =>
     new Promise((resolve, reject) => {
-        fs.readFile(
-            fileName,
-            'utf8',
-            (error, value) => (error ? reject(error) : resolve(value)),
-        );
+        fs.readFile(fileName, 'utf8', (error, value) => (error ? reject(error) : resolve(value)));
     });
 
 /**
@@ -42,7 +38,6 @@ const extractFromFile = async filename => {
         const output = await transform(preCompiledCode, { filename, ...reactIntlConfig });
 
         return getMessagesOrEmptyList(output);
-
     } catch (error) {
         process.stderr.write(`Error transforming file: ${filename}\n`);
         process.stderr.write(`${error}\n`);

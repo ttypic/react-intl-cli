@@ -28,9 +28,7 @@ const saveResults = ({ appLocales, outputPath, localeMappings }) => {
 
     for (const locale of appLocales) {
         translationFileName = `${outputPath}/${locale}.json`;
-        localeTaskDone = task(
-            `Writing translation messages for ${locale} to: ${translationFileName}`,
-        );
+        localeTaskDone = task(`Writing translation messages for ${locale} to: ${translationFileName}`);
 
         // Sort the translation JSON file so that git diffing is easier
         // Otherwise the translation messages will jump around every time we extract
@@ -48,9 +46,7 @@ const saveResults = ({ appLocales, outputPath, localeMappings }) => {
             fs.writeFileSync(translationFileName, prettified);
             localeTaskDone();
         } catch (error) {
-            localeTaskDone(
-                `There was an error saving this translation file: ${translationFileName}\n${error}`,
-            );
+            localeTaskDone(`There was an error saving this translation file: ${translationFileName}\n${error}`);
         }
     }
 };
@@ -85,7 +81,12 @@ const extractMessages = async ({ files, prevLocaleMappings, appLocales, defaultL
 
             for (const message of messages) {
                 for (const locale of appLocales) {
-                    localeToMessages[locale][message.id] = calculateNextMessageText({ oldLocaleMappings: prevLocaleMappings, message, locale, defaultLocale });
+                    localeToMessages[locale][message.id] = calculateNextMessageText({
+                        oldLocaleMappings: prevLocaleMappings,
+                        message,
+                        locale,
+                        defaultLocale
+                    });
                 }
             }
         })

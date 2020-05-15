@@ -28,7 +28,7 @@ function animateProgress(message, amountOfDots = 3) {
 
 const newLine = () => process.stdout.write('\n');
 
-const createProgressLogger  = () => {
+const createProgressLogger = () => {
     let progress;
 
     return message => {

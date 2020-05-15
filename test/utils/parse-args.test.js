@@ -8,11 +8,7 @@ beforeEach(() => {
 
 test('it provide default options', () => {
     const program = parseArgs({
-        argv: [
-            'node',
-            'react-intl-cli',
-            'extract'
-        ]
+        argv: ['node', 'react-intl-cli', 'extract']
     });
 
     expect(program['output']).toBe('translations');
@@ -23,32 +19,28 @@ test('it provide default options', () => {
 });
 
 test('it exit with 0 on help', () => {
-    exitSpy.mockImplementation(status => { throw Error(status) });
-
-    const runHelp = () => parseArgs({
-        argv: [
-            'node',
-            'react-intl-cli',
-            'extract',
-            '-h'
-        ]
+    exitSpy.mockImplementation(status => {
+        throw Error(status);
     });
+
+    const runHelp = () =>
+        parseArgs({
+            argv: ['node', 'react-intl-cli', 'extract', '-h']
+        });
 
     expect(runHelp).toThrowError();
     expect(exitSpy).toHaveBeenNthCalledWith(1, 0);
 });
 
 test('it exit with 1 on unknown props', () => {
-    exitSpy.mockImplementation(status => { throw Error(status) });
-
-    const runProgram = () => parseArgs({
-        argv: [
-            'node',
-            'react-intl-cli',
-            'extract',
-            '--some-option'
-        ]
+    exitSpy.mockImplementation(status => {
+        throw Error(status);
     });
+
+    const runProgram = () =>
+        parseArgs({
+            argv: ['node', 'react-intl-cli', 'extract', '--some-option']
+        });
 
     expect(runProgram).toThrowError();
     expect(exitSpy).toHaveBeenNthCalledWith(1, 1);
@@ -56,13 +48,7 @@ test('it exit with 1 on unknown props', () => {
 
 test('it provide custom glob pattern', () => {
     const program = parseArgs({
-        argv: [
-            'node',
-            'react-intl-cli',
-            'extract',
-            '**/*.jsx',
-            '**/*.js'
-        ]
+        argv: ['node', 'react-intl-cli', 'extract', '**/*.jsx', '**/*.js']
     });
 
     expect(program['globPatterns']).toEqual(['**/*.jsx', '**/*.js']);

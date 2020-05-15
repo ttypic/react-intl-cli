@@ -10,8 +10,7 @@ beforeEach(() => {
 test('it provide empty output on file without messages', () => {
     readFileSpy.mockImplementation((filename, encoding, callback) => callback(undefined, ''));
 
-    return extractFromFile('some-file.js')
-        .then(messages => expect(messages).toStrictEqual([]));
+    return extractFromFile('some-file.js').then(messages => expect(messages).toStrictEqual([]));
 });
 
 test('it extract messages', () => {
@@ -34,8 +33,8 @@ test('it extract messages', () => {
 
     readFileSpy.mockImplementation((filename, encoding, callback) => callback(undefined, fileWithMessagesContent));
 
-    return extractFromFile('some-file.js')
-        .then(messages => expect(messages).toEqual([
+    return extractFromFile('some-file.js').then(messages =>
+        expect(messages).toEqual([
             {
                 id: 'foo.bar',
                 defaultMessage: 'Hello World!'
@@ -45,5 +44,6 @@ test('it extract messages', () => {
                 defaultMessage: 'Hi World!',
                 description: 'Another message'
             }
-        ]));
+        ])
+    );
 });

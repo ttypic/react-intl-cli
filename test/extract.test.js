@@ -10,7 +10,7 @@ const readFileSyncSpy = jest.spyOn(fs, 'readFileSync');
 
 writeFileSyncSpy.mockImplementation(jest.fn());
 mkdirSyncSpy.mockImplementation(jest.fn());
-readFileSyncSpy.mockImplementation(() => "{}");
+readFileSyncSpy.mockImplementation(() => '{}');
 
 const extractFromFile = require('../src/utils/extract-from-file');
 jest.mock('../src/utils/extract-from-file');
@@ -35,7 +35,6 @@ test('it saves result for each locale', () => {
         expect(writeFileSyncSpy).toHaveBeenCalledWith('translations/en.json', expect.anything());
         expect(writeFileSyncSpy).toHaveBeenCalledWith('translations/cz.json', expect.anything());
     });
-
 });
 
 test('it merge messages with existing', () => {
@@ -48,10 +47,7 @@ test('it merge messages with existing', () => {
 
     glob.mockReturnValue(Promise.resolve(['some-file.js']));
 
-    extractFromFile.mockReturnValue([
-        { id: "some_id_1" },
-        { id: "some_id_3", defaultMessage: 'some_default' }
-    ]);
+    extractFromFile.mockReturnValue([{ id: 'some_id_1' }, { id: 'some_id_3', defaultMessage: 'some_default' }]);
 
     readFileSyncSpy.mockImplementation(() => '{"some_id_1": "some_text", "some_id_2": "some_other_text"}');
 
@@ -74,10 +70,7 @@ test('it extract message for default locale even if defaultMessage is not set', 
 
     glob.mockReturnValue(Promise.resolve(['some-file.js']));
 
-    extractFromFile.mockReturnValue([
-        { id: "some_id_1" },
-        { id: "some_id_3", defaultMessage: 'some_default' }
-    ]);
+    extractFromFile.mockReturnValue([{ id: 'some_id_1' }, { id: 'some_id_3', defaultMessage: 'some_default' }]);
 
     readFileSyncSpy.mockImplementation(() => '{"some_id_2": "some_other_text"}');
 
