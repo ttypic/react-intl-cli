@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { transform } = require('@babel/core');
+const { transformAsync: transform } = require('@babel/core');
 
 /**
  * Gets the value at `'metadata.react-intl.messages'` of object.
@@ -14,6 +14,9 @@ const getMessagesOrEmptyList = obj => {
     return messages || [];
 };
 
+/**
+ * @return {Promise<String>} file content
+ */
 const readFile = fileName =>
     new Promise((resolve, reject) => {
         fs.readFile(fileName, 'utf8', (error, value) => (error ? reject(error) : resolve(value)));

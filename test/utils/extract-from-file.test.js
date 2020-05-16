@@ -5,6 +5,7 @@ const readFileSpy = jest.spyOn(fs, 'readFile');
 
 beforeEach(() => {
     jest.clearAllMocks();
+    process.env.NODE_ENV = 'development';
 });
 
 test('it provide empty output on file without messages', () => {
@@ -14,8 +15,6 @@ test('it provide empty output on file without messages', () => {
 });
 
 test('it extract messages', () => {
-    process.env.NODE_ENV = 'development';
-
     const fileWithMessagesContent = `
         import React, { Component } from 'react';
         import { defineMessages } from 'react-intl';
@@ -43,6 +42,39 @@ test('it extract messages', () => {
             },
             {
                 id: 'foo.foo',
+                defaultMessage: 'Hi World!',
+                description: 'Another message'
+            }
+        ])
+    );
+});
+
+test('it extract messages with macros', () => {
+    const fileWithMessagesContent = `
+        import React, { Component } from 'react';
+        import defineMessages from 'define-messages.macro';
+        
+        defineMessages.setupPrefix('foo');
+        
+        export const msgs = defineMessages({
+          header: 'Hello World!',
+          content: {
+            defaultMessage: 'Hi World!',
+            description: 'Another message'
+          }
+        });
+    `;
+
+    readFileSpy.mockImplementation((filename, encoding, callback) => callback(undefined, fileWithMessagesContent));
+
+    return extractFromFile('some-file.js').then(messages =>
+        expect(messages).toEqual([
+            {
+                id: 'foo.header',
+                defaultMessage: 'Hello World!'
+            },
+            {
+                id: 'foo.content',
                 defaultMessage: 'Hi World!',
                 description: 'Another message'
             }
