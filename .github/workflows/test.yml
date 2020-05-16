@@ -22,3 +22,8 @@ jobs:
               run: yarn install --frozen-lockfile
             - name: Run tests
               run: yarn test
+            - name: Run codecov
+                shell: bash
+                env:
+                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+                run: bash <(curl -s https://codecov.io/bash)
