@@ -10,7 +10,7 @@
 
 ## Installation
 
-You could install `react-intl-cli` global or local.
+You can install `react-intl-cli` globally or locally.
 
 ### Global Installation
 
@@ -28,19 +28,13 @@ yarn global add react-intl-cli
 
 ### Local Installation
 
-Using npm:
+Install package using npm or yarn:
 
 ```shell script
-npm install -D react-intl-cli
+npm install --save-dev react-intl-cli
 ```
 
-Using yarn:
-
-```shell script
-yarn add -D react-intl-cli
-```
-
-and add script to your `package.json` file:
+Add script to your `package.json` file:
 
 ```json
 {
