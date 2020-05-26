@@ -37,7 +37,7 @@
     "src"
   ],
   "devDependencies": {
-    "define-messages.macro": "^0.1.0",
+    "define-messages.macro": "^0.2.0",
     "jest": "^26.0.1",
     "prettier": "^2.0.5"
   }
