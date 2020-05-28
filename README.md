@@ -3,6 +3,7 @@
 [![test](https://img.shields.io/github/workflow/status/ttypic/react-intl-cli/Test?label=tests&style=flat-square)](https://github.com/ttypic/react-intl-cli/actions)
 [![coverage-status](https://img.shields.io/codecov/c/github/ttypic/react-intl-cli.svg?style=flat-square)](https://codecov.io/gh/ttypic/react-intl-cli)
 [![npm](https://img.shields.io/npm/v/react-intl-cli.svg?style=flat-square)](https://www.npmjs.com/package/react-intl-cli)
+[![npm-downloads](https://img.shields.io/npm/dt/react-intl-cli.svg?style=flat-square)](https://www.npmjs.com/package/react-intl-cli)
 [![npm-downloads](https://img.shields.io/npm/dw/react-intl-cli.svg?style=flat-square)](https://www.npmjs.com/package/react-intl-cli)
 
 `react-intl-cli` - command line tools for manipulating 
